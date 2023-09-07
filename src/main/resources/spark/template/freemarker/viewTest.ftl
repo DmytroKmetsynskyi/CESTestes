@@ -15,33 +15,32 @@
     </div>
 </nav>
 
-<div class="container text-center">
-    <div class="row align-items-center mt-5">
-        <div class="col">
-        </div>
-
-        <div class="col">
-            <h1>Адміністративна частина сайту</h1>
-
-            <br><br><br>
-
-            <ul class="list-group gap-3">
-                <a class="btn btn-secondary list-group-item" href="/uploadTest" role="button">Додати тест</a>
-                <a class="btn btn-secondary list-group-item" href="/deleteTest" role="button">Видалити тест</a>
-
-            </ul>
-
-        </div>
+<div class="container container">
+    <div class="row">
+        <div class="col align-items-center">
 
 
-        <div class="col">
 
         </div>
     </div>
 </div>
 
 
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col">
 
+        </div>
+
+        <div class="col">
+            <h1>${params}</h1>
+        </div>
+
+        <div class="col">
+
+        </div>
+</div>
+</div>
 
 </body>
 </html>

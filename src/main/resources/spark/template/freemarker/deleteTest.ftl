@@ -15,25 +15,30 @@
     </div>
 </nav>
 
-<div class="container text-center">
+<div class="container">
     <div class="row align-items-center mt-5">
         <div class="col">
-        </div>
 
+        </div>
         <div class="col">
-            <h1>Адміністративна частина сайту</h1>
+            <h2>Видалення тесту</h2>
 
             <br><br><br>
 
-            <ul class="list-group gap-3">
-                <a class="btn btn-secondary list-group-item" href="/uploadTest" role="button">Додати тест</a>
-                <a class="btn btn-secondary list-group-item" href="/deleteTest" role="button">Видалити тест</a>
+        <form method="post" action="/deleteTestFile" enctype="multipart/form-data">
+            <#list fileList as i>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="${i}" id="flexCheckDefault" name="fileToDelete">
+                <label class="form-check-label" for="flexCheckDefault">
+                    ${i}
+                </label>
+            </div>
+        </#list>
 
-            </ul>
+            <button class="btn btn-success" type="submit" id="button-addon1">Видалити тестування</button>
+        </form>
 
         </div>
-
-
         <div class="col">
 
         </div>

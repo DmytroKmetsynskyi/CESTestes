@@ -19,20 +19,35 @@
         <div class="row">
             <div class="col align-items-center">
 
-                <div class="card mb-3 border-dark" style="max-width: 540px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="..." alt="..." class="img-fluid rounded-start">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+
+            </div>
+
+            <div class="col">
+                <#list arrayListofLists as i>
+                <br>
+                    <div class="card" style="width: 18rem;">
+                        <img src="${i[2]}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${i[0]}</h5>
+                            <p class="card-text">${i[1]}</p>
+                            <a href="/viewTest/${i[3]}" class="btn btn-primary">Переглянути тест детальніше</a>
                         </div>
                     </div>
-                </div>
+                <br>
+                </#list>
+            </div>
+
+            <div class="col">
 
             </div>
         </div>
