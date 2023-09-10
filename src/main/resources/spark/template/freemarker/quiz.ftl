@@ -23,10 +23,28 @@
     <div class="row">
         <div class="card ">
             <div class="card-body">
-                <h3 class="card-title  mb-3">${testName}</h3>
-                <img src="${testImage}" style="border-radius: 2.5%;" class="mb-3 mx-auto" alt="...">
-                <h6 class="card-text mb-3">${testDescription}</h6>
-                <a href="/quiz/${file}" class="btn btn-primary mx-auto">Пройти тестирование</a>
+                <form action="/results/${fileName}" method="POST">
+                    <#list questions as i>
+                        <br><h3>${i[0]}</h3><br>
+
+                        <#if i[1]??>
+                            <img src="${i[1]}" style="border-radius: 2.5%;" class="mb-3 mx-auto" alt=""><br>
+                        </#if>
+
+                        <#list i[3] as i_>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadio_${i[2]}" value="${i_}" id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    ${i_}
+                                </label>
+                            </div>
+                        </#list>
+                    </#list>
+
+                <br>
+                <button type="submit" class="btn btn-success">Перевірити тест</button>
+
+                </form>
             </div>
         </div>
     </div>

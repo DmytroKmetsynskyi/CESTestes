@@ -11,7 +11,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/" >CES Testes</a>
+        <a class="navbar-brand" href="/" >CES Tests 🛟</a>
     </div>
 </nav>
 
@@ -35,7 +35,9 @@
             </div>
         </#list>
 
-            <button class="btn btn-success" type="submit" id="button-addon1">Видалити тестування</button>
+            <br>
+
+            <button class="btn btn-danger" type="submit" id="button-addon1">Видалити тестування</button>
         </form>
 
         </div>

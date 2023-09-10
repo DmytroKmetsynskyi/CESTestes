@@ -10,9 +10,9 @@ import javax.servlet.MultipartConfigElement;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static spark.Spark.*;
 
 public class Main {
@@ -151,14 +151,6 @@ public class Main {
             return null;
         });
 
-        get("/viewTest/:file", (request, response) -> {
-            HashMap<String, Object> model = new HashMap<>();
-
-            model.put("params", request.params(":file"));
-
-            return new ModelAndView(model, "viewTest.ftl");
-        }, new FreeMarkerEngine());
-
         get("/deleteTest", (request, response) -> {
             Session session = request.session(false);
 
@@ -178,7 +170,6 @@ public class Main {
 
         post("/deleteTestFile", (req, res) -> {
             String[] filesToDelete = req.queryParamsValues("fileToDelete");
-            System.out.println(Arrays.toString(filesToDelete));
             if (filesToDelete != null) {
                 for (String fileName : filesToDelete) {
                     File fileToDelete = new File("tests/" + fileName);
@@ -191,5 +182,100 @@ public class Main {
             return null;
         });
 
+        get("/viewTest/:file", (request, response) -> {
+            HashMap<String, Object> model = new HashMap<>();
+
+            if (request.params(":file") != null) {
+                String path = "tests/" + request.params(":file");
+
+                InputStream testFiles = new FileInputStream(path);
+
+                Toml tomlFile = new Toml().read(testFiles);
+
+                model.put("testName", tomlFile.getString("test.name"));
+                model.put("testDescription", tomlFile.getString("test.description"));
+                model.put("testImage", tomlFile.getString("test.image"));
+
+                model.put("file", request.params(":file"));
+            }
+
+            return new ModelAndView(model, "viewTest.ftl");
+        }, new FreeMarkerEngine());
+
+        get("/quiz/:file", (request, response) -> {
+            HashMap<String, Object> model = new HashMap<>();
+
+            if (request.params(":file") != null) {
+                String path = "tests/" + request.params(":file");
+
+                InputStream testFiles = new FileInputStream(path);
+
+                Toml tomlFile = new Toml().read(testFiles);
+
+                ArrayList<Object> questions = new ArrayList<>();
+
+                List<Toml> questions_ = tomlFile.getTables("question");
+                for (Toml questionTable : questions_) {
+                    String questionText = questionTable.getString("question");
+                    String image = questionTable.getString("image");
+
+                    String trueAnswer = questionTable.getString("true_answer");
+                    List<String> falseAnswers = questionTable.getList("false_answer", Collections.emptyList());
+
+                    List<String> allAnswers = new ArrayList<>(falseAnswers);
+                    allAnswers.add(trueAnswer);
+
+                    Collections.shuffle(allAnswers);
+
+                    ArrayList<Object> quuestions = new ArrayList<>();
+                    quuestions.add(questionText);
+                    quuestions.add(image);
+                    quuestions.add(questions_.indexOf(questionTable));
+                    quuestions.add(allAnswers);
+
+                    questions.add(quuestions);
+                }
+
+                model.put("questions", questions);
+                model.put("fileName", request.params(":file"));
+            }
+
+            return new ModelAndView(model, "quiz.ftl");
+        }, new FreeMarkerEngine());
+
+        post("/results/:file", (req, res) -> {
+            HashMap<String, Object> model = new HashMap<>();
+
+            List<String> selectedAnswers = req.queryParams().stream()
+                    .filter(param -> param.startsWith("flexRadio_"))
+                    .map(req::queryParams)
+                    .collect(Collectors.toList());
+
+            String path = "tests/" + req.params(":file");
+            InputStream testFiles = new FileInputStream(path);
+            Toml tomlFile = new Toml().read(testFiles);
+            List<Toml> questions_ = tomlFile.getTables("question");
+
+            int totalQuestions = questions_.size();
+            int trueAnswers = 0;
+
+            if (req.params(":file") != null) {
+                for (Toml questionTable : questions_) {
+                    String trueAnswer = questionTable.getString("true_answer");
+
+                    if (selectedAnswers.contains(trueAnswer)) {
+                        trueAnswers++;
+                    }
+                }
+            }
+
+            int falseAnswers = totalQuestions - trueAnswers;
+
+            model.put("totalQuestions", totalQuestions);
+            model.put("trueAnswers", trueAnswers);
+            model.put("falseAnswers", falseAnswers);
+
+            return new ModelAndView(model, "results.ftl");
+        }, new FreeMarkerEngine());
     }
 }
